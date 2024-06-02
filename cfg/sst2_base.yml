@@ -1,0 +1,44 @@
+vocab:
+  tokenizer_type: wordpiece
+  tokenizer:
+    vocab: ./wordpiece/mbert_vocab.txt
+    lowercase: false
+    strip_accents: false
+    clean_text: false
+  vocab_path: D:\pycode\pl\sLDAdata\sst2K=64.npy
+  vocab_path2: D:\pycode\pnlp-wwte\B3.0\vocab.npy
+
+train:
+  type: sst2
+  dataset_type: SST2Dataset
+  labels: [0,1]
+  tensorboard_path: ./logs/
+  log_interval_steps: 1
+  epochs: 1000
+  train_batch_size: 256
+  test_batch_size: 256
+  num_workers: 8
+  max_seq_len: &max_seq_len 64
+  optimizer:
+    lr: 5e-4
+    betas: [0.9, 0.999]
+    eps: 1e-8
+
+model:
+  topic:
+    topic_num: 64
+  projection:
+    num_hashes: 64
+    feature_size: &feature_size 1024
+  bottleneck:
+    feature_size: *feature_size
+    hidden_dim: &hidden_dim 256
+  mixer:
+    num_mixers: 2
+    max_seq_len: *max_seq_len
+    hidden_dim: *hidden_dim
+    mlp_hidden_dim: 256
+  sequence_cls:
+    hidden_dim: *hidden_dim
+    proj_dim: *hidden_dim
+    num_classes: 2
